@@ -41,7 +41,7 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
-                                                            preferredStyle:UIAlertControllerStyleActionSheet]; // 关键修改：改为ActionSheet样式
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
     
     NSArray<NSString *> *options;
     if (type == GameTypeDice) {
