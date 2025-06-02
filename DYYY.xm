@@ -21,7 +21,6 @@
 NSArray<NSString *> *diceImageURLs = @[@"url1", @"url2"];
 NSArray<NSString *> *rpsImageURLs = @[@"url1", @"url2"];
 
-// 声明 ViewControllerForView 函数
 UIViewController *ViewControllerForView(UIView *view) {
     UIResponder *responder = view;
     while (responder && ![responder isKindOfClass:[UIViewController class]]) {
@@ -30,7 +29,6 @@ UIViewController *ViewControllerForView(UIView *view) {
     return (UIViewController *)responder;
 }
 
-// 定义游戏类型枚举
 typedef NS_ENUM(NSInteger, GameType) {
     GameTypeDice,
     GameTypeRPS
@@ -41,7 +39,6 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
 void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (^onSelected)(NSInteger selectedIndex)) {
     NSString *title = (type == GameTypeDice) ? @"选择骰子点数" : @"选择猜拳类型";
     
-    // 使用ActionSheet样式替代Alert
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet]; // 关键修改：改为ActionSheet样式
@@ -53,20 +50,18 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
         options = @[@"石头", @"布", @"剪刀", @"随机"];
     }
 
-    // 添加选项按钮
     for (NSInteger i = 0; i < options.count; i++) {
         NSString *optionTitle = options[i];
         UIAlertAction *action = [UIAlertAction actionWithTitle:optionTitle
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction * _Nonnull action) {
-            // 处理选择逻辑...
+
             [[NSUserDefaults standardUserDefaults] synchronize];
             if (onSelected) onSelected(i);
         }];
         [alert addAction:action];
     }
 
-    // 添加取消按钮（红色显示）
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消"
                                                      style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * _Nonnull action) {
@@ -74,7 +69,6 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
     }];
     [alert addAction:cancel];
 
-    // iPad适配（居中弹出）
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         alert.popoverPresentationController.sourceView = presentingVC.view;
         alert.popoverPresentationController.sourceRect = CGRectMake(presentingVC.view.bounds.size.width/2, 
@@ -83,7 +77,6 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
         alert.popoverPresentationController.permittedArrowDirections = 0;
     }
 
-    // 呈现弹窗
     if (presentingVC) {
         [presentingVC presentViewController:alert animated:YES completion:nil];
     }
