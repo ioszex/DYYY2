@@ -190,12 +190,12 @@ BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitansw
 if (enabled) {
 
 
-%orig(YES);  // 强制设置为解锁
+%orig(YES);
 
 } else {
 
 
-%orig(unlocked);  // 保持原始参数
+%orig(unlocked);
 
 }
 }
@@ -207,11 +207,11 @@ BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitansw
 if (enabled) {
 
 
-return YES;  // 始终返回已解锁
+return YES;
 
 }
 
-return %orig;  // 原始逻辑
+return %orig;
 }
 
 %end
