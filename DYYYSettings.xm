@@ -2372,6 +2372,19 @@ for (NSDictionary *dict in clownSettings) {
 		    @"detail" : @"",
 		    @"cellType" : @6,
 		    @"imageName" : @"ic_playsquarestack_outlined_20"},
+
+@{@"identifier" : @"DYYYtacitanswer",
+		    @"title" : @"突破默契回答",
+		    @"detail" : @"",
+		    @"cellType" : @6,
+		    @"imageName" : @"ic_eye_outlined_20"},
+
+@{@"identifier" : @"XUUZGamecheating",
+		    @"title" : @"小游戏作弊",
+		    @"detail" : @"",
+		    @"cellType" : @6,
+		    @"imageName" : @"ic_eye_outlined_20"},
+
 		  @{@"identifier" : @"DYYYEnableDoubleOpenAlertController",
 		    @"title" : @"启用双击打开菜单",
 		    @"detail" : @"",
