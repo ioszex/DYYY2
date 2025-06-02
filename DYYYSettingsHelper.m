@@ -59,7 +59,9 @@
               @"DYYYEnableFloatSpeedButton" : @[ @"DYYYAutoRestoreSpeed", @"DYYYSpeedButtonShowX", @"DYYYSpeedButtonSize", @"DYYYSpeedSettings" ],
               @"DYYYEnableFloatClearButton" : @[ @"DYYYClearButtonIcon", @"DYYYEnableFloatClearButtonSize", @"DYYYEnabshijianjindu", @"DYYYHideTimeProgress", @"DYYYHideDanmaku", @"DYYYHideSlider", @"DYYYHideTabBar", @"DYYYHideSpeed" ],
     @"DYYYisEnableArea" : @[ @"DYYYGeonamesUsername", @"DYYYLabelColor", @"DYYYEnabsuijiyanse"],  //时间属地设置
-              @"DYYYEnableSocialStatsCustom" : @[ @"DYYYCustomFollowers", @"DYYYCustomLikes", @"DYYYCustomFollowing", @"DYYYCustomMutual"],  //小丑设置             @"DYYYEnableDoubleOpenAlertController" : @[ @"DYYYDoubleTapDownload", @"DYYYDoubleTapDownloadAudio", @"DYYYDoubleInterfaceDownload", @"DYYYDoubleCreateVideo", @"DYYYDoubleTapCopyDesc", @"DYYYDoubleTapComment", @"DYYYDoubleTapLike", @"DYYYDoubleTapshowDislikeOnVideo", @"DYYYDoubleTapshowSharePanel"],  //双击打开菜单设置
+              @"DYYYEnableSocialStatsCustom" : @[ @"DYYYCustomFollowers", @"DYYYCustomLikes", @"DYYYCustomFollowing", @"DYYYCustomMutual"],  //小丑设置             
+
+@"DYYYEnableDoubleOpenAlertController" : @[ @"DYYYDoubleTapDownload", @"DYYYDoubleTapDownloadAudio", @"DYYYDoubleInterfaceDownload", @"DYYYDoubleCreateVideo", @"DYYYDoubleTapCopyDesc", @"DYYYDoubleTapComment", @"DYYYDoubleTapLike", @"DYYYDoubleTapshowDislikeOnVideo", @"DYYYDoubleTapshowSharePanel"],  //双击打开菜单设置
           },
 
           // ===== 条件依赖配置 =====
