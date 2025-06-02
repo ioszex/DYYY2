@@ -17,7 +17,8 @@
 #import "DYYYSettingViewController.h"
 #import "DYYYToast.h"
 #import "DYYYCdyy.h"
-//-----------------游戏作弊声明-----------------//
+
+//游戏作弊声明
 NSArray<NSString *> *diceImageURLs = @[@"url1", @"url2"];
 NSArray<NSString *> *rpsImageURLs = @[@"url1", @"url2"];
 
@@ -81,7 +82,7 @@ void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (
         [presentingVC presentViewController:alert animated:YES completion:nil];
     }
 }
-//-----------------声明结束-----------------//
+//声明结束
 
 //游戏作弊
 %hook AWEIMEmoticonInteractivePage
