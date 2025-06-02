@@ -16,6 +16,212 @@
 #import "DYYYConstants.h"
 #import "DYYYSettingViewController.h"
 #import "DYYYToast.h"
+#import "DYYYCdyy.h"
+//-----------------游戏作弊声明-----------------//
+NSArray<NSString *> *diceImageURLs = @[@"url1", @"url2"];
+NSArray<NSString *> *rpsImageURLs = @[@"url1", @"url2"];
+
+// 声明 ViewControllerForView 函数
+UIViewController *ViewControllerForView(UIView *view) {
+    UIResponder *responder = view;
+    while (responder && ![responder isKindOfClass:[UIViewController class]]) {
+        responder = [responder nextResponder];
+    }
+    return (UIViewController *)responder;
+}
+
+// 定义游戏类型枚举
+typedef NS_ENUM(NSInteger, GameType) {
+    GameTypeDice,
+    GameTypeRPS
+};
+
+void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (^onSelected)(NSInteger selectedIndex));
+
+void ShowGameSelectorAlert(UIViewController *presentingVC, GameType type, void (^onSelected)(NSInteger selectedIndex)) {
+    NSString *title = (type == GameTypeDice) ? @"选择骰子点数" : @"选择猜拳类型";
+    
+    // 使用ActionSheet样式替代Alert
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet]; // 关键修改：改为ActionSheet样式
+    
+    NSArray<NSString *> *options;
+    if (type == GameTypeDice) {
+        options = @[@"1 点", @"2 点", @"3 点", @"4 点", @"5 点", @"6 点", @"随机"];
+    } else {
+        options = @[@"石头", @"布", @"剪刀", @"随机"];
+    }
+
+    // 添加选项按钮
+    for (NSInteger i = 0; i < options.count; i++) {
+        NSString *optionTitle = options[i];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:optionTitle
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+            // 处理选择逻辑...
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            if (onSelected) onSelected(i);
+        }];
+        [alert addAction:action];
+    }
+
+    // 添加取消按钮（红色显示）
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction * _Nonnull action) {
+        if (onSelected) onSelected(-1);
+    }];
+    [alert addAction:cancel];
+
+    // iPad适配（居中弹出）
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        alert.popoverPresentationController.sourceView = presentingVC.view;
+        alert.popoverPresentationController.sourceRect = CGRectMake(presentingVC.view.bounds.size.width/2, 
+                                                                   presentingVC.view.bounds.size.height/2, 
+                                                                   1, 1);
+        alert.popoverPresentationController.permittedArrowDirections = 0;
+    }
+
+    // 呈现弹窗
+    if (presentingVC) {
+        [presentingVC presentViewController:alert animated:YES completion:nil];
+    }
+}
+//-----------------声明结束-----------------//
+
+//游戏作弊
+%hook AWEIMEmoticonInteractivePage
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"XUUZGamecheating"]) {
+        %orig;
+        return;
+    }
+
+    UIViewController *vc = ViewControllerForView(collectionView);
+
+    if ([cell.accessibilityLabel isEqualToString:@"摇骰子"]) {
+        ShowGameSelectorAlert(vc, GameTypeDice, ^(NSInteger selectedIndex) {
+            if (selectedIndex >= 0) {
+                [[NSUserDefaults standardUserDefaults] setInteger:selectedIndex + 1 forKey:@"selectedDicePoint"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                %orig;
+            }
+        });
+        return;
+    }
+
+    if ([cell.accessibilityLabel isEqualToString:@"猜拳"]) {
+        ShowGameSelectorAlert(vc, GameTypeRPS, ^(NSInteger selectedIndex) {
+            if (selectedIndex >= 0) {
+                [[NSUserDefaults standardUserDefaults] setInteger:selectedIndex forKey:@"selectedRPS"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                %orig;
+            }
+        });
+        return;
+    }
+
+    %orig;
+}
+
+%end
+
+%hook TIMXOSendMessage
+
+- (void)setContent:(id)arg1 {
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"XUUZGamecheating"]) {
+        %orig(arg1); 
+        return;
+    }
+
+    NSMutableDictionary *mutableContent = [arg1 mutableCopy];
+    if ([mutableContent isKindOfClass:[NSMutableDictionary class]]) {
+        NSNumber *resourceType = mutableContent[@"resource_type"];
+        NSNumber *stickerType = mutableContent[@"sticker_type"];
+        NSString *displayName = mutableContent[@"display_name"];
+
+        // 替换骰子图像
+        if ([resourceType intValue] == 5 &&
+            [stickerType intValue] == 12 &&
+            [displayName isEqualToString:@"摇骰子"]) {
+
+            NSMutableDictionary *urlDict = [mutableContent[@"url"] mutableCopy];
+            if ([urlDict isKindOfClass:[NSMutableDictionary class]]) {
+                NSInteger selectedDicePoint = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedDicePoint"];
+                if (selectedDicePoint > 0 && selectedDicePoint <= 6) {
+                    NSString *selectedURL = diceImageURLs[selectedDicePoint - 1];
+                    urlDict[@"url_list"] = @[selectedURL];
+                    mutableContent[@"url"] = urlDict;
+                    
+                }
+            }
+        }
+
+        // 替换猜拳图像
+        if ([resourceType intValue] == 5 &&
+            [stickerType intValue] == 12 &&
+            [displayName isEqualToString:@"猜拳"]) {
+
+            NSMutableDictionary *urlDict = [mutableContent[@"url"] mutableCopy];
+            if ([urlDict isKindOfClass:[NSMutableDictionary class]]) {
+                NSInteger selectedRPS = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedRPS"];
+                if (selectedRPS >= 0 && selectedRPS <= 2) {
+                    NSString *selectedURL = rpsImageURLs[selectedRPS];
+                    urlDict[@"url_list"] = @[selectedURL];
+                    mutableContent[@"url"] = urlDict;
+                    
+                }
+            }
+        }
+    }
+
+    %orig(mutableContent);
+}
+
+%end
+
+//默契回答
+%hook AWEIMExchangeAnswerMessage
+
+- (void)setUnlocked:(BOOL)unlocked {
+
+BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitanswer"];
+
+if (enabled) {
+
+
+%orig(YES);  // 强制设置为解锁
+
+} else {
+
+
+%orig(unlocked);  // 保持原始参数
+
+}
+}
+
+- (BOOL)unlocked {
+
+BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"DYYYtacitanswer"];
+
+if (enabled) {
+
+
+return YES;  // 始终返回已解锁
+
+}
+
+return %orig;  // 原始逻辑
+}
+
+%end
 
 // 禁用自动进入直播间
 %hook AWELiveFeedStatusViewModel
