@@ -18,6 +18,11 @@
 #import "DYYYToast.h"
 #import "DYYYCdyy.h"
 
+@interface AWEUserHomeAccessibilityViewV2 : UIView
+- (void)findAndModifyDouyinLabelInView:(UIView *)view;
+- (void)modifyNicknameInView:(UIView *)view;
+@end
+
 //游戏作弊声明
 NSArray<NSString *> *diceImageURLs = @[@"url1", @"url2"];
 NSArray<NSString *> *rpsImageURLs = @[@"url1", @"url2"];
