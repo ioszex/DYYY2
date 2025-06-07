@@ -253,7 +253,7 @@ return %orig;
         }
     }
 }
-- (void)findAndModifyDouyinLabelInView:(UIView *)view {
+- (void)findAndModify:(UIView *)view {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UILabel class]]) {
             UILabel *label = (UILabel *)subview;
