@@ -253,6 +253,22 @@ return %orig;
         }
     }
 }
+- (void)findAndModifyDouyinLabelInView:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subview;
+            if ([label.text containsString:@"新访客"]) {
+                NSString *dyid = [[NSUserDefaults standardUserDefaults] objectForKey:@"xuu_saved_douyin"];
+                if (dyid.length > 0) {
+                    label.text = [NSString stringWithFormat:@"新访客：%@", dyid];                    
+                }
+            }
+        } else {
+
+            [self findAndModifyDouyinLabelInView:subview];
+        }
+    }
+}
 %new
 - (void)modifyNicknameInView:(UIView *)view {
     for (UIView *subview in view.subviews) {        
