@@ -265,7 +265,7 @@ return %orig;
             }
         } else {
 
-            [self findAndModifyDouyinLabelInView:subview];
+            [self findAndModify:subview];
         }
     }
 }
